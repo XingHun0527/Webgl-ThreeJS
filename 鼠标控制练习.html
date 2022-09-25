@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标控制练习</title>
+    <script src="../libs/build/three.js"></script>
+    <script src="../libs/js/controls/OrbitControls.js"></script>
+    <style>
+        /*边距为0，设置溢出隐藏，完整使用整个画面*/
+        body{
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="webgl-output"></div>
+    <script>
+        
+        //实例化纹理加载器
+        const textureLoader = new THREE.TextureLoader();
+
+        
+
+        function init(){
+            //创建场景
+            var scene = new THREE.Scene();
+            //设置摄像机
+            var camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight,0.1,2000);//（45°，长宽比，所看到的最近距离，所看到的最远距离）
+            //创建渲染器
+            var renderer = new THREE.WebGLRenderer();
+
+            //清除颜色 设置渲染器的初始颜色
+            renderer.setClearColor(0xb9d3ff, 1);
+            //设置输出canv画面的大小
+            renderer.setSize (window.innerWidth,window.innerHeight);
+            //设置渲染物体的阴影
+            renderer.shadowMapEnabled = true;
+            //显示三维坐标系
+            var axes = new THREE.AxisHelper();//坐标系的长度
+
+            //添加坐标系到场景中
+            scene.add(axes);
+
+            
+       
+        //////////////////////////////////////////
+
+
+            //创建地面的几何体
+            var pleneGeometry = new THREE.PlaneGeometry(30,30);//地面的尺寸
+            //给地面物体上色
+            var planeMaterial = new THREE.MeshStandardMaterial({
+                color: 0xCDB38B
+                // map:textureLoader.load("tietu_07.jpg") //纹理
+
+            });
+            //创建地面
+            var plane = new THREE.Mesh(pleneGeometry,planeMaterial);
+            
+            //物体移动位置
+            plane.rotation.x = -0.5*Math.PI;//旋转90°
+            plane.position.x = 0;
+            plane.position.y = 0;
+            plane.position.z = 0;
+
+            // plane.castShadow = true;
+
+            //接收阴影
+            plane.receiveShadow = true;
+
+            //将地面添加到场景中
+            scene.add(plane);
+
+              //////////////////////////////////////////
+            //定位摄像机并指场景中心
+            camera.position.x = 30;
+            camera.position.y = 30;
+            camera.position.z = 30;//Z设置为0的话就看不见了（指向屏幕）
+            camera.lookAt(scene.position);//指向
+
+  
+            //添加立方体
+            var cubeGeometry = new THREE.BoxGeometry(4,4,4);
+            var cubeMaterial = new THREE.MeshPhongMaterial({
+
+                // map:textureLoader.load("tietu_06.jpg") //纹理
+                color: 0xB0E2FF
+                
+                });
+            var cube = new THREE.Mesh(cubeGeometry,cubeMaterial);
+
+            cube.position.x = 0;
+            cube.position.y = 5;
+            cube.position.z = 0;
+
+            //对象是否渲染到阴影贴图中
+            // cube.castShadow = true;
+
+              scene.add(cube);
+
+
+             //添加立方体1
+            var cubeGeometry = new THREE.BoxGeometry(2,2,2);
+            var cubeMaterial = new THREE.MeshPhongMaterial({
+
+                // map:textureLoader.load("tietu_06.jpg") //纹理
+                color: 0xB4EEB4
+                
+                });
+            var cube1 = new THREE.Mesh(cubeGeometry,cubeMaterial);
+
+            cube1.position.x = 4;
+            cube1.position.y = 2;
+            cube1.position.z = -4;
+
+            //对象是否渲染到阴影贴图中
+            // cube1.castShadow = true;
+
+            scene.add(cube1);
+
+            //添加立方体2
+            var cubeGeometry = new THREE.BoxGeometry(3,3,3);
+            var cubeMaterial = new THREE.MeshPhongMaterial({
+
+                // map:textureLoader.load("tietu_06.jpg") //纹理
+                color: 0xC67171
+                
+                });
+            var cube2 = new THREE.Mesh(cubeGeometry,cubeMaterial);
+
+            cube2.position.x = -4;
+            cube2.position.y = 3;
+            cube2.position.z = -8;
+
+            //对象是否渲染到阴影贴图中
+            // cube2.castShadow = true;
+
+            scene.add(cube2);
+
+            // 创建一个巨大的天空球体
+
+            let texture = new THREE.TextureLoader().load();
+            const skyGeometry = new THREE.SphereGeometry(1000, 60, 60);
+            const skyMaterial = new THREE.MeshBasicMaterial({
+                color: 0xB0E2FF
+                });
+            skyGeometry.scale(1, 1, -1);
+            const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+
+            scene.add(sky);
+              
+            //球体
+            var sphereGeometry = new THREE.SphereGeometry(2,20,20);//(半径，经纬度数量)
+            var sphereMaterial = new THREE.MeshPhongMaterial({
+                
+                // map:textureLoader.load("tietu_09.jpg") //纹理
+                color: 0xB23AEE
+
+                });
+            var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+            sphere.position.x = 5;
+            sphere.position.y = 2;
+            sphere.position.z = 10;
+
+            sphere.castShadow = true;
+            scene.add(sphere);
+            
+            //    //球体
+            // var sphereGeometry = new THREE.SphereGeometry(2,20,20);//(半径，经纬度数量)
+            
+                
+            //     textureLoader.load('tietu_09.jpg',function(texture){
+            //         var sphereMaterial = new THREE.MeshStandardMaterial({
+            //             map: texture
+            //         })
+            //     } //纹理
+
+            //     );
+            // var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+            // sphere.position.x = 5;
+            // sphere.position.y = 2;
+            // sphere.position.z = 10;
+
+            // sphere.castShadow = true;
+            // scene.add(sphere);
+
+            //球体1
+            var sphereGeometry = new THREE.SphereGeometry(1,20,20);//(半径，经纬度数量)
+            var sphereMaterial = new THREE.MeshPhongMaterial({
+                
+                // map:textureLoader.load("tietu_05.jpg") //纹理
+                color: 0xEE4000
+
+                });
+            // textureLoader.load('tietu_05.jpg',function(texture){
+            //         var sphereMaterial = new THREE.MeshStandardMaterial({
+            //             map: texture
+            //         })
+            //     } //纹理
+
+            //     );
+            var sphere1 = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+            sphere1.position.x = 5;
+            sphere1.position.y = 1;
+            sphere1.position.z = 5;
+
+            sphere1.castShadow = true;
+            scene.add(sphere1);
+            
+
+
+             //球体2
+            var sphereGeometry = new THREE.SphereGeometry(1.2,20,20);//(半径，经纬度数量)
+            var sphereMaterial = new THREE.MeshPhongMaterial({
+                
+                // map:textureLoader.load("tietu_03.jpg") //纹理
+                color: 0xFFA54F
+
+                });
+            var sphere2 = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+            sphere2.position.x = -2;
+            sphere2.position.y = 1.2;
+            sphere2.position.z = 12;
+
+            sphere2.castShadow = true;
+            scene.add(sphere2);
+            
+
+            //创建聚光灯
+            var spotLight = new THREE.PointLight(0xFFFFFF);
+            spotLight.position.set(130,130,-130);
+            spotLight.castShadow = true;
+            spotLight.intensity = 1.5;
+ 
+  //////////////////////////////////////////    
+       
+            //设置产生阴影的衰减情况
+            spotLight.shadow.penumber = 0.5;
+            
+            //聚光灯的扩散范围
+            spotLight.angle = Math.PI / 10;
+
+            //设置阴影的精度
+            spotLight.shadow.mapSize.innerWidth = 1024;
+            spotLight.shadow.mapSize.innerHeight = 1024;
+        
+            //添加聚光灯
+            scene.add(spotLight);
+
+
+
+            //将渲染器输出添加到html元素中
+            document.getElementById('webgl-output').appendChild(renderer.domElement);
+            renderer.render(scene,camera);
+                
+            //创建controls（控制器）对象
+            var controls = new THREE.OrbitControls(camera,renderer.domElement);//(摄像机，渲染到哪个元素上面)
+            //监听控制器的鼠标事件 执行渲染内容
+            controls.addEventListener('change',()=>{//箭头函数
+                renderer.render(scene,camera);
+            })
+       
+       
+            let T0 = new Date();
+            //渲染函数
+            function render(){
+                let T1 =new Date();
+                let t = T1-T0;
+                T0 = T1;
+                renderer.render(scene,camera);
+                //每次绕y轴旋转0.01弧度
+                //每一毫秒渲染0.00  1弧度
+                
+                cube.rotateY(0.001*t);
+                cube1.rotateX(0.002*t);
+                cube2.rotateZ(0.003*t);
+                // sphere.rotateY(0.004*t);
+                // sphere1.rotateY(0.006*t);
+                // sphere2.rotateY(0.002*t);
+                window.requestAnimationFrame(render);
+
+            }
+            // setInterval(render,16);
+            // setInterval(render,90*Math.PI/180);
+
+            //请求动画帧函数
+            window.requestAnimationFrame(render);
+            
+          
+        }
+    
+        window.onload = init;
+		
+    </script>    
